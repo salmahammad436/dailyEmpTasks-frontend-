@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../Store'; // Adjust the import path if necessary
+import { RootState, AppDispatch } from '../../Store'; 
 import { fetchAllTasks } from '../../Store/Slices/Tasks/tasksSlice';
 
-const ProductivityTable: React.FC = () => {
-  const dispatch = useDispatch();
+interface ProductivityTableProps {
+  isModalVisible: boolean;
+}
+
+const ProductivityTable: React.FC<ProductivityTableProps> = ({ isModalVisible }) => {
+  const dispatch: AppDispatch = useDispatch();
   const { tasks, loading, error } = useSelector((state: RootState) => state.tasks);
 
   useEffect(() => {
@@ -20,26 +24,20 @@ const ProductivityTable: React.FC = () => {
     return acc;
   }, {});
 
+  
+
   return (
     <div className="container mx-auto flex justify-center mt-4">
-      {loading && <p>Loading...</p>}
+      {/* {loading && <p>Loading...</p>} */}
       {error && <p className="text-red-500">Error: {error}</p>}
-      {!loading && !error && (
-        <table className="border border-slate-300 border-spacing-4 border-rounded-lg text-center">
+      {!isModalVisible&&(
+        <table className="border border-slate-300 border-spacing-4 text-center">
           <thead>
             <tr>
-              <th rowSpan={2} className="border border-slate-300 px-4 py-4">
-                Employee Name
-              </th>
-              <th colSpan={3} className="border border-slate-300 px-4 py-4">
-                Tasks
-              </th>
-              <th rowSpan={2} className="border border-slate-300 px-4 py-4">
-                Productivity
-              </th>
-              <th rowSpan={2} className="border border-slate-300 px-4 py-4">
-                Remaining Time
-              </th>
+              <th rowSpan={2} className="border border-slate-300 px-4 py-4">Employee Name</th>
+              <th colSpan={3} className="border border-slate-300 px-4 py-4">Tasks</th>
+              <th rowSpan={2} className="border border-slate-300 px-4 py-4">Productivity</th>
+              <th rowSpan={2} className="border border-slate-300 px-4 py-4">Remaining Time</th>
             </tr>
             <tr>
               <th className="border border-slate-300 px-4 py-2">Task Name</th>
@@ -53,10 +51,7 @@ const ProductivityTable: React.FC = () => {
                 {employeeTasks.map((task, taskIndex) => (
                   <tr key={task.id}>
                     {taskIndex === 0 && (
-                      <td
-                        className="border border-slate-300 px-4 py-4"
-                        rowSpan={employeeTasks.length}
-                      >
+                      <td className="border border-slate-300 px-4 py-4" rowSpan={employeeTasks.length}>
                         {employeeName}
                       </td>
                     )}
@@ -65,24 +60,16 @@ const ProductivityTable: React.FC = () => {
                     <td className="border border-slate-300 px-4 py-4">{task.end_time}</td>
                     {taskIndex === 0 && (
                       <>
-                        <td
-                          className="border border-slate-300 px-4 py-4"
-                          rowSpan={employeeTasks.length}
-                        >
+                        <td className="border border-slate-300 px-4 py-4" rowSpan={employeeTasks.length}>
                           <div className="flex flex-col items-center">
                             <div className="flex items-center mb-1">
-                              <span className="text-purple-600 text-sm mr-2">20</span>
+                              <span className="text-black-600 text-sm mr-2">20</span>
                               <span className="text-gray-500 text-sm">%</span>
                             </div>
-                            <div className="w-32 bg-gray-200 h-1 rounded-full">
-                              <div className="bg-purple-600 h-1 rounded-full" />
-                            </div>
+                            <div className="w-32 bg-purple-600 h-1 rounded-full"></div>
                           </div>
                         </td>
-                        <td
-                          className="border border-slate-300 px-4 py-4"
-                          rowSpan={employeeTasks.length}
-                        >
+                        <td className="border border-slate-300 px-4 py-4" rowSpan={employeeTasks.length}>
                           {task.remaining_hours} hours
                         </td>
                       </>
